@@ -1,9 +1,8 @@
 package cmd
 
 import (
-	"net/http"
-
 	"github.com/Akmyrzza/simple-service/internal/adapters/repo/sqlite"
+	"github.com/Akmyrzza/simple-service/internal/adapters/server"
 	"github.com/Akmyrzza/simple-service/internal/adapters/server/rest"
 	"github.com/Akmyrzza/simple-service/internal/domain/core"
 	"github.com/Akmyrzza/simple-service/internal/domain/usecases"
@@ -11,9 +10,10 @@ import (
 
 func Execute() {
 	app := struct {
-		repo *sqlite.St
-		core *core.St
-		ucs  *usecases.St
+		repo       *sqlite.St
+		core       *core.St
+		ucs        *usecases.St
+		restApiSrv *server.St
 	}{}
 
 	confLoad()
@@ -22,13 +22,6 @@ func Execute() {
 	app.ucs = usecases.New()
 	app.core = core.New(app.repo)
 	app.ucs.SetCore(app.core)
+	app.restApiSrv = server.Start(conf.HttpListen, rest.GetHandler(app.ucs))
 
-	server := &http.Server{
-		Addr: conf.HttpListen,
-		Handler: rest.GetHandler(
-			app.ucs,
-		),
-	}
-
-	server.ListenAndServe()
 }
