@@ -20,7 +20,7 @@ func GetHandler(lg logger.Lite, ucs *usecases.St) http.Handler {
 
 	s := &St{lg: lg, ucs: ucs}
 
-	//r.POST("/ping", sqlite.Ping)
+	r.POST("/ping", func(ctx *gin.Context) { ctx.Status(http.StatusOK) })
 	r.POST("/user", s.hUserCreate)
 
 	return r
