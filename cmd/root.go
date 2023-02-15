@@ -21,10 +21,8 @@ func Execute() {
 	confLoad()
 
 	app.lg = zap.New(conf.LogLevel, conf.Debug)
-	app.repo = sqlite.New()
-	app.core = core.New(app.repo)
-	app.ucs = usecases.New()
-	app.ucs.SetCore(app.core)
-	app.srv = server.Start(conf.HttpListen, rest.GetHandler(app.ucs))
-
+	app.repo = sqlite.New(app.lg)
+	app.core = core.New(app.lg, app.repo)
+	app.ucs = usecases.New(app.lg, app.core)
+	app.srv = server.Start(app.lg, conf.HttpListen, rest.GetHandler(app.lg, app.ucs))
 }

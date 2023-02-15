@@ -52,3 +52,15 @@ func getZapLevel(v string) zapcore.Level {
 		return zap.InfoLevel
 	}
 }
+
+func (o *St) Warnw(msg string, args ...any) {
+	o.sl.Warnw(msg, args...)
+}
+
+func (o *St) Errorw(msg string, err any, args ...any) {
+	o.sl.Errorw(msg, err, args)
+}
+
+func (o *St) Infow(msg string, args ...any) {
+	o.sl.Infow(msg, args...)
+}

@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 	"time"
+
+	"github.com/Akmyrzza/simple-service/internal/adapters/logger"
 )
 
 const (
@@ -12,12 +14,15 @@ const (
 )
 
 type St struct {
+	lg logger.Lite
+
 	addr   string
 	server *http.Server
 }
 
-func Start(addr string, handler http.Handler) *St {
+func Start(lg logger.Lite, addr string, handler http.Handler) *St {
 	s := &St{
+		lg:   lg,
 		addr: addr,
 		server: &http.Server{
 			Addr:              addr,
@@ -28,6 +33,7 @@ func Start(addr string, handler http.Handler) *St {
 		},
 	}
 
+	s.lg.Infow("Start rest-api", "addr", s.server.Addr)
 	//go func() {
 	//err :=
 	s.server.ListenAndServe()
