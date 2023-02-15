@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Akmyrzza/simple-service/internal/domain/entities"
 	"github.com/gin-gonic/gin"
@@ -10,25 +9,26 @@ import (
 
 func (d *St) UserCreate(ctx *gin.Context, obj *entities.UserCUSt) string {
 	var result string
-	
+	var lastId int
+
+	statement, _ := d.db.Prepare("SELECT max(id) FROM users")
+	statement.QueryRow().Scan(&lastId)
+
 	ctx.ShouldBindJSON(obj)
-	statementInsert, _ := d.db.Prepare("INSERT INTO users (name, phone) VALUES (?, ?)")
-	fmt.Print(obj.Name)
-	statementInsert.Exec(obj.Name, obj.Phone)
+	statementInsert, _ := d.db.Prepare("INSERT INTO users (id, name, phone) VALUES (?, ?, ?)")
+	statementInsert.Exec(lastId+1, obj.Name, obj.Phone)
 
 	result = "User successfully created."
 	return result
 }
 
-func (d *St) UserGet(ctx context.Context, id string) *entities.UserSt {
-
-	/*ctx.JSON(http.StatusOK, gin.H{
-		"message": "user created successfully",
-	})
-	*/
+func (d *St) UserGet(ctx context.Context, id int) (*entities.UserSt, error) {
 	result := &entities.UserSt{}
 
-	return result
+	statement, err := d.db.Prepare("SELECT id, name, phone FROM users WHERE id = ?")
+	statement.QueryRow(id).Scan(&result.Id, &result.Name, &result.Phone)
+
+	return result, err
 }
 
 /*

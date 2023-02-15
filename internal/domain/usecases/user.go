@@ -11,3 +11,10 @@ func (u *St) UserCreate(ctx *gin.Context, obj *entities.UserCUSt) string {
 
 	return result
 }
+
+func (u *St) UserGet(ctx *gin.Context, id int) (*entities.UserSt, error) {
+
+	result, err := u.cr.User.Get(ctx, id)
+
+	return result, err
+}

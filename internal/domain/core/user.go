@@ -18,3 +18,9 @@ func (c *User) Create(ctx *gin.Context, obj *entities.UserCUSt) string {
 
 	return result
 }
+
+func (c *User) Get(ctx *gin.Context, id int) (*entities.UserSt, error) {
+	result, err := c.r.repo.UserGet(ctx, id)
+
+	return result, err
+}

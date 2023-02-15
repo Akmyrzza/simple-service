@@ -9,5 +9,5 @@ import (
 
 type Repo interface {
 	UserCreate(ctx *gin.Context, obj *entities.UserCUSt) string
-	UserGet(ctx context.Context, id string) *entities.UserSt
+	UserGet(ctx context.Context, id int) (*entities.UserSt, error)
 }
