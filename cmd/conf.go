@@ -3,6 +3,8 @@ package cmd
 import "github.com/spf13/viper"
 
 var conf = struct {
+	Debug      bool   `mapstructure:"DEBUG"`
+	LogLevel   string `mapstructure:"LOG_LEVEL"`
 	HttpListen string `mapstructure:"HTTP_LISTEN"`
 }{}
 
